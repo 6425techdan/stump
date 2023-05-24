@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stump Grinding Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-blue-400">
+  <div class="container mx-auto px-6 py-8 max-w-lg bg-white rounded shadow-md mt-20 ">
+    <h1 class="font-bold text-3xl mb-4">Stump Grinding Calculator</h1>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="col-span-1">
+        <label for="small" class="font-bold text-gray-500">Small (<1 ft in diameter):</label>
+        <input type="number" id="small" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+      </div>
+      <div class="col-span-1">
+        <label for="medium" class="font-bold text-gray-500">Medium (1-2 ft):</label>
+        <input type="number" id="medium" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+      </div>
+      <div class="col-span-1">
+        <label for="large" class="font-bold text-gray-500">Large (2-3 ft):</label>
+        <input type="number" id="large" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+      </div>
+      <div class="col-span-1">
+        <label for="xlarge" class="font-bold text-gray-500">X-Large (3 ft +):</label>
+        <input type="number" id="xlarge" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+      </div>
+    </div>
+    <button id="calculate-btn" class="bg-blue-500 text-white rounded px-3 py-2 mt-6 block w-full">Calculate</button>
+    <div id="result" class="font-bold text-gray-700 mt-6 text-center"></div>
+    <button id="settings-btn" class="bg-blue-500 text-white rounded px-3 py-2 mt-6 block w-full">Settings</button>
+    <div id="settings"></div>
+
+<!-- Modal -->
+<div id="modal" class="m-5 fixed inset-0 flex items-center justify-center z-50 backdrop-filter backdrop-blur-lg" style="display: none;">
+    <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-full md:w-1/4">
+      <span class="close font-bold float-right cursor-pointer">X</span>
+      <h2 class="font-bold text-2xl mb-4">Settings</h2>
+      <form id="settings-form" class="space-y-4">
+      <div>
+        <label for="additional-small" class="font-bold text-gray-500">Additional Small:</label>
+        <input type="number" id="additional-small" value="25" class="border rounded w-full p-2 mt-2">
+      </div>
+      <div>
+        <label for="additional-medium" class="font-bold text-gray-500">Additional Medium:</label>
+        <input type="number" id="additional-medium" value="75" class="border rounded w-full p-2 mt-2">
+      </div>
+      <div>
+        <label for="additional-large" class="font-bold text-gray-500">Additional Large:</label>
+        <input type="number" id="additional-large" value="125" class="border rounded w-full p-2 mt-2">
+      </div>
+      <div>
+        <label for="additional-xlarge" class="font-bold text-gray-500">Additional X-Large:</label>
+        <input type="number" id="additional-xlarge" value="175" class="border rounded w-full p-2 mt-2">
+      </div>
+      <button type="submit" class="bg-blue-500 text-white rounded px-3 py-2 w-full">Save</button>
+    </form>
+  </div>
+</div>
+
+  </div>
+  <script src="calc.js"></script>
+</body>
+</html>
