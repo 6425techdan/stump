@@ -212,7 +212,11 @@ function loadSettings() {
 }
 
 function saveSettingsToStorage(settings) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  } catch (error) {
+    // The current session should keep working even when browser storage is blocked.
+  }
 }
 
 function normalizeSettings(settings) {
