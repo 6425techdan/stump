@@ -7,60 +7,90 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-blue-400">
-  <div class="container mx-auto px-6 py-8 max-w-lg bg-white rounded shadow-md mt-20 ">
-    <h1 class="font-bold text-3xl mb-4">Stump Grinding Calculator</h1>
-    <div class="grid grid-cols-2 gap-6">
+<body class="bg-blue-400 min-h-screen font-sans">
+  <main class="container mx-auto px-6 py-8 max-w-2xl bg-white rounded shadow-md mt-10 mb-10">
+    <p class="uppercase tracking-wide text-sm font-bold text-blue-600 mb-2">Stump grinding quote helper</p>
+    <h1 class="font-bold text-3xl mb-4">Estimate a stump grinding visit</h1>
+    <p class="text-gray-600 mb-6">
+      Enter the count of stumps by diameter. The calculator charges the base rate for the largest stump on the job,
+      then applies the additional-stump rate to every remaining stump.
+    </p>
+
+    <section aria-labelledby="stump-counts-heading">
+      <h2 id="stump-counts-heading" class="font-bold text-xl mb-3">Stumps on the job</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <div class="col-span-1">
-        <label for="small" class="font-bold text-gray-500">Small (<1 ft in diameter):</label>
-        <input type="number" id="small" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+        <label for="small" class="font-bold text-gray-500">Small (&lt;1 ft diameter)</label>
+        <input type="number" id="small" min="0" step="1" inputmode="numeric" placeholder="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
       </div>
       <div class="col-span-1">
-        <label for="medium" class="font-bold text-gray-500">Medium (1-2 ft):</label>
-        <input type="number" id="medium" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+        <label for="medium" class="font-bold text-gray-500">Medium (1-2 ft diameter)</label>
+        <input type="number" id="medium" min="0" step="1" inputmode="numeric" placeholder="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
       </div>
       <div class="col-span-1">
-        <label for="large" class="font-bold text-gray-500">Large (2-3 ft):</label>
-        <input type="number" id="large" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+        <label for="large" class="font-bold text-gray-500">Large (2-3 ft diameter)</label>
+        <input type="number" id="large" min="0" step="1" inputmode="numeric" placeholder="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
       </div>
       <div class="col-span-1">
-        <label for="xlarge" class="font-bold text-gray-500">X-Large (3 ft +):</label>
-        <input type="number" id="xlarge" min="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
+        <label for="xlarge" class="font-bold text-gray-500">X-Large (3+ ft diameter)</label>
+        <input type="number" id="xlarge" min="0" step="1" inputmode="numeric" placeholder="0" class="w-full border rounded p-2 mt-2 bg-gray-200">
       </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+      <button id="calculate-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded px-3 py-2 block w-full">Calculate estimate</button>
+      <button id="settings-btn" class="bg-gray-700 hover:bg-gray-800 text-white font-bold rounded px-3 py-2 block w-full">Adjust rates</button>
     </div>
-    <button id="calculate-btn" class="bg-blue-500 text-white rounded px-3 py-2 mt-6 block w-full">Calculate</button>
-    <div id="result" class="font-bold text-gray-700 mt-6 text-center"></div>
-    <button id="settings-btn" class="bg-blue-500 text-white rounded px-3 py-2 mt-6 block w-full">Settings</button>
-    <div id="settings"></div>
+
+    <section id="result" class="text-gray-700 mt-6" aria-live="polite">
+      <p class="text-center text-gray-500">Add stump counts and calculate to see a quote.</p>
+    </section>
 
 <!-- Modal -->
-<div id="modal" class="m-5 fixed inset-0 flex items-center justify-center z-50 backdrop-filter backdrop-blur-lg" style="display: none;">
-    <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-full md:w-1/4">
-      <span class="close font-bold float-right cursor-pointer">X</span>
-      <h2 class="font-bold text-2xl mb-4">Settings</h2>
+<div id="modal" class="fixed inset-0 items-center justify-center z-50 bg-gray-900 bg-opacity-50 px-4" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="settings-heading">
+    <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-screen overflow-y-auto">
+      <button type="button" class="close font-bold float-right cursor-pointer text-gray-500 hover:text-gray-900" aria-label="Close settings">X</button>
+      <h2 id="settings-heading" class="font-bold text-2xl mb-2">Rate settings</h2>
+      <p class="text-gray-600 mb-4">
+        Base rate applies once to the largest stump tier present. Additional rates apply to all other stumps.
+        Your settings are saved in this browser.
+      </p>
       <form id="settings-form" class="space-y-4">
-      <div>
-        <label for="additional-small" class="font-bold text-gray-500">Additional Small:</label>
-        <input type="number" id="additional-small" value="25" class="border rounded w-full p-2 mt-2">
+      <div class="grid grid-cols-3 gap-3 font-bold text-gray-500 text-sm">
+        <span>Tier</span>
+        <span>Base rate</span>
+        <span>Additional rate</span>
       </div>
-      <div>
-        <label for="additional-medium" class="font-bold text-gray-500">Additional Medium:</label>
-        <input type="number" id="additional-medium" value="75" class="border rounded w-full p-2 mt-2">
+      <div class="grid grid-cols-3 gap-3 items-end">
+        <label for="base-small" class="font-bold text-gray-500">Small</label>
+        <input type="number" id="base-small" min="0" step="1" class="border rounded w-full p-2" aria-label="Small base rate">
+        <input type="number" id="additional-small" min="0" step="1" class="border rounded w-full p-2" aria-label="Small additional rate">
       </div>
-      <div>
-        <label for="additional-large" class="font-bold text-gray-500">Additional Large:</label>
-        <input type="number" id="additional-large" value="125" class="border rounded w-full p-2 mt-2">
+      <div class="grid grid-cols-3 gap-3 items-end">
+        <label for="base-medium" class="font-bold text-gray-500">Medium</label>
+        <input type="number" id="base-medium" min="0" step="1" class="border rounded w-full p-2" aria-label="Medium base rate">
+        <input type="number" id="additional-medium" min="0" step="1" class="border rounded w-full p-2" aria-label="Medium additional rate">
       </div>
-      <div>
-        <label for="additional-xlarge" class="font-bold text-gray-500">Additional X-Large:</label>
-        <input type="number" id="additional-xlarge" value="175" class="border rounded w-full p-2 mt-2">
+      <div class="grid grid-cols-3 gap-3 items-end">
+        <label for="base-large" class="font-bold text-gray-500">Large</label>
+        <input type="number" id="base-large" min="0" step="1" class="border rounded w-full p-2" aria-label="Large base rate">
+        <input type="number" id="additional-large" min="0" step="1" class="border rounded w-full p-2" aria-label="Large additional rate">
       </div>
-      <button type="submit" class="bg-blue-500 text-white rounded px-3 py-2 w-full">Save</button>
+      <div class="grid grid-cols-3 gap-3 items-end">
+        <label for="base-xlarge" class="font-bold text-gray-500">X-Large</label>
+        <input type="number" id="base-xlarge" min="0" step="1" class="border rounded w-full p-2" aria-label="X-Large base rate">
+        <input type="number" id="additional-xlarge" min="0" step="1" class="border rounded w-full p-2" aria-label="X-Large additional rate">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded px-3 py-2 w-full">Save rates</button>
+        <button type="button" id="reset-settings-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded px-3 py-2 w-full">Reset defaults</button>
+      </div>
     </form>
   </div>
 </div>
 
-  </div>
+  </main>
   <script src="calc.js"></script>
 </body>
 </html>
